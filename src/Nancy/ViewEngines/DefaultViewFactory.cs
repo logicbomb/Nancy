@@ -39,8 +39,9 @@
         /// <param name="viewName">The name of the view to render.</param>
         /// <param name="model">The model that should be passed into the view.</param>
         /// <param name="viewLocationContext">A <see cref="ViewLocationContext"/> instance, containing information about the context for which the view is being rendered.</param>
+        /// <param name="viewBag">Dynamic view data that is not part of the model</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Response RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        public Response RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext, ExpandoObject viewBag = null)
         {
             if (viewName == null && model == null)
             {
@@ -60,10 +61,10 @@
             var actualViewName = 
                 viewName ?? GetViewNameFromModel(model);
 
-            return this.GetRenderedView(actualViewName, model, viewLocationContext);
+            return this.GetRenderedView(actualViewName, model, viewLocationContext, viewBag);
         }
 
-        private Response GetRenderedView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        private Response GetRenderedView(string viewName, dynamic model, ViewLocationContext viewLocationContext, ExpandoObject viewBag)
         {
             var viewLocationResult =
                 this.viewResolver.GetViewLocation(viewName, model, viewLocationContext);
@@ -80,7 +81,8 @@
                 resolvedViewEngine,
                 viewLocationResult,
                 GetSafeModel(model),
-                this.renderContextFactory.GetRenderContext(viewLocationContext)
+                this.renderContextFactory.GetRenderContext(viewLocationContext),
+                viewBag
             );
         }
 
@@ -122,11 +124,11 @@
             return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }
 
-        private static Response SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model, IRenderContext renderContext)
+        private static Response SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model, IRenderContext renderContext, ExpandoObject viewBag)
         {
             try
             {
-                return viewEngine.RenderView(locationResult, model, renderContext);
+                return viewEngine.RenderView(locationResult, model, renderContext, viewBag);
             }
             catch (Exception)
             {
