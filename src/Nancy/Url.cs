@@ -1,6 +1,8 @@
 namespace Nancy
 {
     using System;
+    using System.Net;
+    using System.Net.Sockets;
 
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query#fragment
@@ -71,5 +73,58 @@ namespace Nancy
         /// Gets the fragment of the request
         /// </summary>
         public string Fragment { get; set; }
+
+        public override string ToString()
+        {
+            return this.Scheme + "://" + 
+                GetHostName(this.HostName) + 
+                GetPort(this.Port) +
+                GetCorrectPath(this.BasePath) +
+                GetCorrectPath(this.Path) +
+                this.Query +
+                GetFragment(this.Fragment);
+        }
+
+        /// <summary>
+        /// Casts the current <see cref="Url"/> instance to a <see cref="Uri"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>An <see cref="Uri"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator Uri(Url url)
+        {
+            return new Uri(url.ToString(), UriKind.Absolute);
+        }
+
+        private static string GetFragment(string fragment)
+        {
+            return (string.IsNullOrEmpty(fragment)) ? string.Empty : string.Concat("#", fragment);
+        }
+
+        private static string GetCorrectPath(string path)
+        {
+            return (string.IsNullOrEmpty(path) || path.Equals("/")) ? string.Empty : path;
+        }
+
+        private static string GetPort(int? port)
+        {
+            return (!port.HasValue) ?
+                string.Empty : 
+                string.Concat(":", port.Value);
+        }
+
+        private static string GetHostName(string hostName)
+        {
+            IPAddress address;
+
+            if (IPAddress.TryParse(hostName, out address))
+            {
+                return (address.AddressFamily == AddressFamily.InterNetworkV6)
+                           ? string.Concat("[", address.ToString(), "]")
+                           : address.ToString();
+
+            }
+
+            return hostName;
+        }
     }
 }

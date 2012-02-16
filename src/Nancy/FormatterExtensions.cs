@@ -42,7 +42,10 @@ namespace Nancy
         {
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
 
-            return new JsonResponse<TModel>(model, serializer) { StatusCode = statusCode };
+            var r = new JsonResponse<TModel>(model, serializer);
+        	r.StatusCode = statusCode;
+
+        	return r;
         }
 
         public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
