@@ -38,11 +38,11 @@ namespace Nancy
             return AsFile(formatter, applicationRelativeFilePath);
         }
 
-        public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model)
+        public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
 
-            return new JsonResponse<TModel>(model, serializer);
+            return new JsonResponse<TModel>(model, serializer) { StatusCode = statusCode };
         }
 
         public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)

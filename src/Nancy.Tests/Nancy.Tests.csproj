@@ -193,6 +193,7 @@
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\StaticConventBuilderFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
     <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
@@ -224,6 +225,9 @@
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Assets\Styles\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\test.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
