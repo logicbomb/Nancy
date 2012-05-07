@@ -282,6 +282,23 @@
             stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
         }
 
+		[Fact]
+		public void Should_be_able_to_render_nested_layouts()
+		{
+			// Given
+			var location = FindView("ViewThatUsesNested");
+
+			var stream = new MemoryStream();
+
+			// When
+			var response = this.engine.RenderView(location, null, this.renderContext);
+			response.Contents.Invoke(stream);
+
+			// Then
+			var output = ReadAll(stream);
+			output.ShouldContainInOrder("<h1>MasterLayout</h1>", "Child Section", "<div>ViewThatUsesNested</div>");
+		}
+
         [Fact]
         public void Should_be_able_to_render_view_with_layout_to_stream()
         {
