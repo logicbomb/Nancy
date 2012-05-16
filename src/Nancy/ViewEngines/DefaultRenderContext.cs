@@ -67,13 +67,13 @@
         /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise, <see langword="null"/>.</returns>
         public ViewLocationResult LocateView(string viewName, dynamic model)
         {
-			var vlr = this.viewResolver.GetViewLocation(viewName, model, this.viewLocationContext);
-			if (vlr == null)
-			{
-				throw new ViewNotFoundException(viewName);
-			}
+            var vlr = this.viewResolver.GetViewLocation(viewName, model, this.viewLocationContext);
+            if (vlr == null)
+            {
+                throw new ViewNotFoundException(viewName);
+            }
 
-        	return vlr;
+            return vlr;
         }
 
         /// <summary>
