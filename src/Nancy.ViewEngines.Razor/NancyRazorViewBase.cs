@@ -184,8 +184,14 @@
         {
             this.childBody = body ?? string.Empty;
             this.childSections = sectionContents ?? new Dictionary<string, string>();
-
-            this.Execute();
+            try
+            {
+                this.Execute();
+            }
+            catch (NullReferenceException)
+            {
+                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model is null");
+            }
 
             this.Body = this.contents.ToString();
 
@@ -224,7 +230,7 @@
         }
     }
 
-	/// <summary>
+    /// <summary>
     /// A strongly-typed view base.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
