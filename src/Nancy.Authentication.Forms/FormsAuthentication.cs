@@ -245,7 +245,12 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            return new NancyCookie(formsAuthenticationCookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) };
+            return new NancyCookie(formsAuthenticationCookieName, String.Empty, true)
+                    {
+                        Expires = DateTime.Now.AddDays(-1),
+                        Domain = configuration.CookieDomain,
+                        Path = configuration.CookiePath
+                    };
         }
 
         /// <summary>
