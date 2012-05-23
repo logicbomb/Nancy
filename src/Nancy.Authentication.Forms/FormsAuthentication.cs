@@ -228,7 +228,12 @@ namespace Nancy.Authentication.Forms
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true) { Expires = cookieExpiry };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true)
+                            {
+                                Expires = cookieExpiry,
+                                Domain = configuration.CookieDomain,
+                                Path = configuration.CookiePath
+                            };
 
             return cookie;
         }
